@@ -1,0 +1,210 @@
+:root {
+  --bg: #000000;
+  --text: #ffffff;
+  --hint: #9a9aa3; /* серый, который читается на чёрном */
+  --surface: #1f1f23; /* тёмная пилюля, полоски прогресса */
+  --accent: #3e88f7; /* синий нативной кнопки */
+  --glass: rgba(255, 255, 255, 0.16); /* «стекло» поверх цветных карточек */
+  --radius-tile: 26px;
+  --radius-card: 28px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent; /* без серой вспышки при тапе */
+}
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* ---------- Типографика ---------- */
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hint);
+}
+.title {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.hint { margin: 6px 0 0; font-size: 15px; color: var(--hint); }
+
+/* ---------- Прогресс опросника ---------- */
+.progress { display: flex; gap: 6px; margin-bottom: 20px; }
+.progress__bar { flex: 1; height: 4px; border-radius: 2px; background: var(--surface); }
+.progress__bar--done { background: var(--text); }
+
+/* ---------- Плитки выбора ---------- */
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+/* При нечётном количестве последняя плитка во всю ширину */
+.option:last-child:nth-child(odd) { grid-column: span 2; }
+
+.option {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  min-height: 124px;
+  padding: 16px;
+  border: 0;
+  border-radius: var(--radius-tile);
+  color: #fff; /* фон задаётся классом цвета, см. ниже */
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.option:active { transform: scale(0.97); } /* лёгкое «нажатие» */
+.option--active { box-shadow: inset 0 0 0 3px #fff; } /* белая рамка у выбранной */
+
+.option__top { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+.option__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--glass);
+}
+.option__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+}
+.option__label { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+
+.option--blue { background: #2b4bd8; }
+.option--green { background: #1e7d37; }
+.option--red { background: #c62d35; }
+.option--violet { background: #6a3fd1; }
+.option--orange { background: #b85a0e; }
+.option--teal { background: #1c5563; }
+.option--plum { background: #4a2478; }
+
+/* ---------- Запасные кнопки для браузера (в Telegram их нет) ---------- */
+.dev-controls { display: flex; gap: 8px; margin-top: 24px; }
+.dev-controls button {
+  height: 54px;
+  border: 0;
+  border-radius: 16px;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+.dev-controls__back { padding: 0 20px; background: var(--surface); }
+.dev-controls__main { flex: 1; background: var(--accent); }
+.dev-controls__main:disabled { opacity: 0.5; cursor: default; }
+
+/* Видимый фокус для клавиатуры */
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Уважаем системную настройку «уменьшить движение» */
+@media (prefers-reduced-motion: reduce) {
+  .option { transition: none; }
+}
+
+/* ---------- Результаты ---------- */
+.results { display: grid; gap: 14px; }
+.results__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+/* Карточка игры: компактная — обложка слева, большая — обложка сверху */
+.game { display: flex; overflow: hidden; border-radius: 24px; }
+.game--hero { flex-direction: column; border-radius: var(--radius-card); }
+
+/* Цвета карточек по очереди. Блок обложки чуть светлее фона карточки */
+.game--tone-0 { background: #12343d; }
+.game--tone-0 .game__cover { background: #1c5563; }
+.game--tone-1 { background: #4a2478; }
+.game--tone-1 .game__cover { background: #5e3394; }
+.game--tone-2 { background: #7a3a08; }
+.game--tone-2 .game__cover { background: #96490d; }
+
+.game__cover {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+  width: 104px;
+  overflow: hidden;
+}
+.game--hero .game__cover { width: 100%; height: 168px; padding: 16px; }
+
+/* Заглушка обложки: крупная полупрозрачная буква */
+.game__initial {
+  position: absolute;
+  right: -6px;
+  bottom: -18px;
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.14);
+}
+.game--hero .game__initial { font-size: 180px; bottom: -34px; }
+
+.game__cover-text { position: relative; display: flex; flex-direction: column; gap: 4px; }
+
+.game__body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; min-width: 0; }
+.game__title { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+.game__title--hero { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+.game__genre { font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.78); }
+.game__why { margin: 2px 0 8px; font-size: 15px; line-height: 1.4; color: rgba(255, 255, 255, 0.9); }
+.game__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Кнопки-пилюли ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--glass);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pill__icon { display: flex; }
+.pill--light { background: #fff; color: #000; font-weight: 700; } /* главное действие в карточке */
+.pill--dark { min-height: 44px; padding: 0 16px; background: var(--surface); }
+.pill:disabled { opacity: 0.5; cursor: default; }
+
+.error { margin-top: 16px; color: #ff6b6b; }
