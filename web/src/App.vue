@@ -50,7 +50,7 @@ async function recommend() {
 }
 
 function next() {
-  if (!mainEnabled.value) return
+  if (!mainEnabled.value || loading.value) return
   if (screen.value === 'results' || isLastStep.value) {
     recommend()
     return
@@ -66,7 +66,7 @@ function back() {
   if (stepIndex.value > 0) stepIndex.value--
 }
 
-useTelegramButtons({mainText, mainEnabled, backVisible, onMain: next, onBack: back})
+useTelegramButtons({mainText, mainEnabled, backVisible, loading,onMain: next, onBack: back})
 
 onMounted(() => initTelegram())
 </script>
